@@ -6,6 +6,7 @@
 /BinClock/bin/Release
 /BinClock/obj
 /BinClock/Resources/Resource.designer.fs
+BinClock.userprefs
 *.suo
 *.db
 *.bak
