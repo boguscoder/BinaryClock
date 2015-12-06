@@ -56,24 +56,15 @@ type MainActivity () =
             
         columnLayout
 
-    member this.getColumn num = 
-        gridRoot.GetChildAt(num) :?> ViewGroup
-
-    member this.getItem (column:ViewGroup) num = 
-        column.GetChildAt(num)
-
     member this.setColumnValue idx max value = 
-        let columnView = this.getColumn idx
+        let columnView = gridRoot.GetChildAt(idx) :?> ViewGroup
 
         let testBit bit value = 
             value &&& (1 <<< bit) <> 0
 
         for i in 0..max - 1 do
-            let bullet = (this.getItem columnView (max - 1 - i)) :?> ImageView
-            if (testBit i value) then
-                bullet.SetImageResource(Resource_Drawable.on)
-            else 
-                bullet.SetImageResource(Resource_Drawable.off)
+            let bullet = (columnView.GetChildAt(max - 1 - i)) :?> ImageView
+            bullet.SetImageResource(if (testBit i value) then Resource_Drawable.on else Resource_Drawable.off)
         ()
 
     member this.updateDate = 
@@ -108,9 +99,7 @@ type MainActivity () =
         let timeLoop = async {
             while true do
                 this.RunOnUiThread (fun _ -> this.updateDate)
-                Log.Debug(typeof<MainActivity>.ToString(), String.Format("Tick at TID {0}", Thread.CurrentThread.ManagedThreadId)) |> ignore
                 do! Async.Sleep 1000  
         }
 
         Async.Start timeLoop
-

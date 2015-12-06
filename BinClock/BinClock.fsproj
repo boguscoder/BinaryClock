@@ -62,14 +62,12 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.fs" />
     <AndroidResource Include="Resources\layout\Main.axml" />
-    <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\drawable\Icon.png" />
-    <Compile Include="Properties\AssemblyInfo.fs" />
-    <Content Include="Properties\AndroidManifest.xml" />
-    <Compile Include="MainActivity.fs" />
     <AndroidResource Include="Resources\values\dimens.xml" />
     <AndroidResource Include="Resources\drawable\off.9.png" />
     <AndroidResource Include="Resources\drawable\on.9.png" />
+    <Compile Include="Properties\AssemblyInfo.fs" />
+    <Content Include="Properties\AndroidManifest.xml" />
+    <Compile Include="MainActivity.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

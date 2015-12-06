@@ -23,10 +23,10 @@ namespace BinClock
     #nowarn "51" // address-of operator can occur in the code
     #nowarn "1183" // unused 'this' reference
     
-    exception ReturnException698dd3eef8f540ffbdc660577b0768ef of obj
-    exception ReturnNoneException698dd3eef8f540ffbdc660577b0768ef
+    exception ReturnException75c1be64f35a4a18a53513c5b24faf55 of obj
+    exception ReturnNoneException75c1be64f35a4a18a53513c5b24faf55
     [<AutoOpen>]
-    module FuncConvertFinalOverload698dd3eef8f540ffbdc660577b0768ef =
+    module FuncConvertFinalOverload75c1be64f35a4a18a53513c5b24faf55 =
       // This extension member adds to the FuncConvert type and is the last resort member in the method overloading rules. 
       type global.Microsoft.FSharp.Core.FuncConvert with
           /// A utility function to convert function values from tupled to curried form
@@ -66,16 +66,13 @@ namespace BinClock
         (* partial *)Resource_Drawable () =
             static do Android.Runtime.ResourceIdManager.UpdateIdValues()
             // aapt resource value: 0x7f020000
-            static member Icon = 2130837504
+            static member monoandroidsplash = 2130837504
             
             // aapt resource value: 0x7f020001
-            static member monoandroidsplash = 2130837505
+            static member off = 2130837505
             
             // aapt resource value: 0x7f020002
-            static member off = 2130837506
-            
-            // aapt resource value: 0x7f020003
-            static member on = 2130837507
+            static member on = 2130837506
             (* Member of type 'CodeTypeConstructor' is not supported by the CodeDOM provider and was omitted *)
 
 
@@ -92,22 +89,9 @@ namespace BinClock
     
     and
         
-        (* partial *)Resource_String () =
-            static do Android.Runtime.ResourceIdManager.UpdateIdValues()
-            // aapt resource value: 0x7f050001
-            static member ApplicationName = 2131034113
-            
-            // aapt resource value: 0x7f050000
-            static member Hello = 2131034112
-            (* Member of type 'CodeTypeConstructor' is not supported by the CodeDOM provider and was omitted *)
-
-
-    
-    and
-        
         (* partial *)Resource_Style () =
             static do Android.Runtime.ResourceIdManager.UpdateIdValues()
-            // aapt resource value: 0x7f060000
-            static member Mono_Android_Theme_Splash = 2131099648
+            // aapt resource value: 0x7f050000
+            static member Mono_Android_Theme_Splash = 2131034112
             (* Member of type 'CodeTypeConstructor' is not supported by the CodeDOM provider and was omitted *)
 
