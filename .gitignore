@@ -3,7 +3,9 @@
 ################################################################################
 
 /BinClock/bin/Debug
+/BinClock/bin/Release
 /BinClock/obj
+/BinClock/Resources/Resource.designer.fs
 *.suo
 *.db
 *.bak
