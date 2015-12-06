@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/BinClock/bin/Debug
+/BinClock/obj
+*.suo
+*.db
+*.bak
