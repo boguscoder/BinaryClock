@@ -32,13 +32,52 @@ type MainActivity () =
                         (SecondsSnd, 4) ]
 
     let mutable gridRoot:ViewGroup = null
+    let mutable scaleDetector:ScaleGestureDetector = null
+    let mutable scaleFactor = 1.0f
+    let scaleBasis = 1.0f
+
+    interface ScaleGestureDetector.IOnScaleGestureListener with
+        member this.OnScale detector = 
+            if scaleBasis <> detector.ScaleFactor then
+                let deltaScale = detector.ScaleFactor - scaleBasis
+
+                Log.Debug(typeof<MainActivity>.ToString(), String.Format("Scaling with factor {0}", scaleFactor + deltaScale)) |> ignore
+
+                let initialSize = this.Resources.GetDimensionPixelSize(Resource_Dimension.bullet_size)
+                let scaledSize = int(float32(initialSize) * scaleFactor)
+     
+                let rescale (item:ImageView) = 
+                    item.LayoutParameters.Height <- scaledSize
+                    item.LayoutParameters.Width <- scaledSize
+                    item.RequestLayout()
+     
+                this.forEachItem rescale
+
+                scaleFactor <- scaleFactor + deltaScale
+
+            false
+        member this.OnScaleBegin detector = true
+        member this.OnScaleEnd detector = ()
+
+    member this.forEachColumn f = 
+        ColumnSpec |> List.iteri f
+
+    member this.forEachItem f = 
+        let columnF idx (_, max) = 
+            let columnView = gridRoot.GetChildAt(idx) :?> ViewGroup
+
+            for i in 0..max - 1 do
+                let bullet = (columnView.GetChildAt(max - 1 - i)) :?> ImageView
+                bullet |> f
+            
+        this.forEachColumn columnF
 
     member this.createGrid = 
         let columnContainer = new LinearLayout(this)
         columnContainer.Orientation <- Orientation.Horizontal
         columnContainer.SetGravity GravityFlags.Bottom
 
-        ColumnSpec |> List.iter (fun (_, size) -> columnContainer.AddView (this.createColumn size))
+        this.forEachColumn (fun _ (_, size) -> this.createColumn size |> columnContainer.AddView)
 
         let root = this.LayoutInflater.Inflate(Resource_Layout.Main, null) :?> ViewGroup
         root.AddView(columnContainer)
@@ -85,16 +124,19 @@ type MainActivity () =
 
         let now = DateTime.Now
 
-        ColumnSpec |> List.iteri (fun idx col -> getColumnValueFromDate (fst col) now |> this.setColumnValue idx (snd col))
+        this.forEachColumn (fun idx (col, size) -> getColumnValueFromDate col now |> this.setColumnValue idx size)
         ()
+
+    override this.OnTouchEvent(ev) = 
+        scaleDetector.OnTouchEvent(ev) |> ignore
+        true
 
     override this.OnCreate (bundle) =
         base.OnCreate(bundle)
         let root = this.createGrid
+       
         gridRoot <- root.GetChildAt(0) :?> ViewGroup
-        this.SetContentView(root)
-
-        Log.Debug(typeof<MainActivity>.ToString(), String.Format("Main TID {0}", Thread.CurrentThread.ManagedThreadId)) |> ignore
+        scaleDetector <- new ScaleGestureDetector(this, this)
 
         let timeLoop = async {
             while true do
@@ -102,4 +144,5 @@ type MainActivity () =
                 do! Async.Sleep 1000  
         }
 
+        this.SetContentView(root)
         Async.Start timeLoop
