@@ -34,14 +34,19 @@ type MainActivity () =
     let mutable gridRoot:ViewGroup = null
     let mutable scaleDetector:ScaleGestureDetector = null
     let mutable scaleFactor = 1.0f
-    let scaleBasis = 1.0f
 
     interface ScaleGestureDetector.IOnScaleGestureListener with
         member this.OnScale detector = 
-            if scaleBasis <> detector.ScaleFactor then
-                let deltaScale = detector.ScaleFactor - scaleBasis
+            let ZOOM_BASE = 1.0f
+            let ZOOM_MAX = 1.7f
+            let ZOOM_MIN = 0.3f
+        
+            if ZOOM_BASE <> detector.ScaleFactor then
+                let deltaScale = detector.ScaleFactor - ZOOM_BASE
 
-                Log.Debug(typeof<MainActivity>.ToString(), String.Format("Scaling with factor {0}", scaleFactor + deltaScale)) |> ignore
+                Log.Debug(typeof<MainActivity>.ToString(), String.Format("Last zoom factor {0}, delta {1}", scaleFactor, deltaScale)) |> ignore
+
+                scaleFactor <- min ZOOM_MAX (max ZOOM_MIN (scaleFactor + deltaScale))
 
                 let initialSize = this.Resources.GetDimensionPixelSize(Resource_Dimension.bullet_size)
                 let scaledSize = int(float32(initialSize) * scaleFactor)
@@ -50,11 +55,7 @@ type MainActivity () =
                     item.LayoutParameters.Height <- scaledSize
                     item.LayoutParameters.Width <- scaledSize
                     item.RequestLayout()
-     
                 this.forEachItem rescale
-
-                scaleFactor <- scaleFactor + deltaScale
-
             false
         member this.OnScaleBegin detector = true
         member this.OnScaleEnd detector = ()
@@ -95,6 +96,7 @@ type MainActivity () =
             
         columnLayout
 
+    // TODO: consider reusing forEachItem
     member this.setColumnValue idx max value = 
         let columnView = gridRoot.GetChildAt(idx) :?> ViewGroup
 
